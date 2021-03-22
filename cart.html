@@ -7,7 +7,7 @@
   <title>Add Items To Cart</title>
 
   <link href='https://fonts.googleapis.com/css?family=Pangolin' rel='stylesheet'>
-  
+
 <!-- JS Code for switching pages -->
 <script>
   function show(shown, hidden) {
@@ -63,7 +63,7 @@ button {
 <body>
   <div class="page" id="cart1">
     <h1>Please enter the name of the item and the price of the item that you are buying</h1>
-    <form id="add-form" style="font-size: 16px;">
+    <form id="addItem" style="font-size: 16px;">
       <label style="font-size: 16px;">
         Item Name:
         <input id="name" type="text" placeholder="Item Name">
@@ -73,7 +73,7 @@ button {
         Item Price:
         <input id="price" type="number" step="0.01" placeholder="Item Price">
       </label>
-      <button id="add" type="submit">Add Item</button>
+      <button id="addItem" type="submit">Add Item</button>
     </form>
 
     <ul id="items">
@@ -99,15 +99,15 @@ button {
     console.log(e.target)
     }
 
-    const addForm = document.getElementById('add-form')
+    const addItem = document.getElementById('addItem')
     const inputName = document.getElementById('name')
     const inputPrice = document.getElementById('price')
-    const itemsList = document.getElementById('items')
+    const listItem = document.getElementById('items')
     const divTotal = document.getElementById('total')
 
     const cart = []
 
-    addForm.onsubmit = function(e) {
+    addItem.onsubmit = function(e) {
     e.preventDefault()
     const name = inputName.value
     const price = inputPrice.value
@@ -116,7 +116,7 @@ button {
     showCart()
     }
 
-    itemsList.onclick = function(e) {
+    listItem.onclick = function(e) {
     console.log(e.target)
     if (e.target && e.target.classList.contains('remove')) {
         console.log(e.target.dataset.name)
@@ -124,11 +124,11 @@ button {
     }
     }
 
-    itemsList.onchange = function(e) {
+    listItem.onchange = function(e) {
     if (e.target && e.target.classList.contains('update')) {
-        const qty = parseInt(e.target.value)
+        const quantity = parseInt(e.target.value)
         const name = e.target.dataset.name
-        updateCart(name, qty)
+        updateCart(name, quantity)
 
     }
     }
@@ -136,23 +136,23 @@ button {
     function addToCart(name, price) {
     for (let i = 0; i < cart.length; i += 1) {
         if (cart[i].name === name) {
-        cart[i].qty += 1
+        cart[i].quantity += 1
         showCart()
         return true
         }
     }
-    cart.push({ name, price, qty: 1})
+    cart.push({ name, price, quantity: 1})
     showCart()
     }
 
-    function removeFromCart(name, qty = 0) {
-    console.log(name, qty)
+    function removeFromCart(name, quantity = 0) {
+    console.log(name, quantity)
     for (let i = 0; i < cart.length; i += 1) {
         if (cart[i].name === name) {
-        if (qty) {
-            let newQty = cart[i].qty - qty
-            if (newQty > 0) {
-            cart[i].qty = newQty
+        if (quantity) {
+            let newquantity = cart[i].quantity - quantity
+            if (newquantity > 0) {
+            cart[i].quantity = newquantity
             } else {
             cart.splice(i, 1)
             }
@@ -171,29 +171,29 @@ button {
           str += `<li>
             <span>
               ${cart[i].name} -> $${cart[i].price} each
-              * ${cart[i].qty} = $${(cart[i].qty * cart[i].price).toFixed(2)}
+              * ${cart[i].quantity} = $${(cart[i].quantity * cart[i].price).toFixed(2)}
             </span>
             <span>
               <button class="remove" data-name="${cart[i].name}">remove</button>
             </span>
           </li>`
         }
-        itemsList.innerHTML = str
+        listItem.innerHTML = str
         divTotal.innerHTML = getTotal()
       }
 
       function getTotal() {
         let total = 0
         for (let i = 0; i < cart.length; i += 1) {
-          total += cart[i].price * cart[i].qty
+          total += cart[i].price * cart[i].quantity
         }
         return total.toFixed(2)
       }
 
-      function updateCart(name, qty) {
+      function updateCart(name, quantity) {
         for (let i = 0; i < cart.length; i += 1) {
           if (cart[i].name === name) {
-            cart[i].qty = qty
+            cart[i].quantity = quantity
             showCart()
             return true
           }
